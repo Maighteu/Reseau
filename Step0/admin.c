@@ -8,7 +8,7 @@
 #include <string.h>
 #include <time.h>
 #include "data.h"
-#include "LibSerHV.h"
+#include "LibSerMV.h"
 
 // include pour les fonctions entrees sortie
 #include <stdio.h>
@@ -94,32 +94,32 @@ void MonPrintf(char* tempo, int espace,int taille )
  Count = espace-taille ;
  while ( Count>0 )
  {
-       printf(" ");
-       Count-- ;
+    printf(" ");
+    Count-- ;
  }
 }
 
-void AfficheEnteteVehiculeHV ()
+void AfficheEnteteVehiculeMV ()
 {
- char Tampon[80] ;
- sprintf(Tampon,"%s","Ref" ) ;MonPrintf(Tampon,4,strlen(Tampon)) ;
- sprintf(Tampon,"%s","Constructeur") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
- sprintf(Tampon,"%s","Modele") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
- sprintf(Tampon,"%s","Quantite") ; MonPrintf(Tampon,6,strlen(Tampon)) ;
- printf("\n") ;
+     char Tampon[80] ;
+     sprintf(Tampon,"%s","Ref" ) ;MonPrintf(Tampon,4,strlen(Tampon)) ;
+     sprintf(Tampon,"%s","Constructeur") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
+     sprintf(Tampon,"%s","Modele") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
+     sprintf(Tampon,"%s","Quantite") ; MonPrintf(Tampon,6,strlen(Tampon)) ;
+     printf("\n") ;
 }
 
-void AfficheVehiculeHV (struct VehiculeHV    *UnRecord)
+void AfficheVehiculeMV (struct VehiculeMV    *UnRecord)
 {
- char Tampon[80] ;
- sprintf(Tampon,"%d",UnRecord->Reference ) ;  MonPrintf(Tampon,4,strlen(Tampon)) ;
- sprintf(Tampon,"%s",UnRecord->Constructeur ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
- sprintf(Tampon,"%s",UnRecord->Modele ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
- sprintf(Tampon,"%d",UnRecord->Quantite ) ; MonPrintf(Tampon,6,strlen(Tampon)) ;
- printf("\n") ;
+    char Tampon[80] ;
+    sprintf(Tampon,"%d",UnRecord->Reference ) ;  MonPrintf(Tampon,4,strlen(Tampon)) ;
+    sprintf(Tampon,"%s",UnRecord->Constructeur ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
+    sprintf(Tampon,"%s",UnRecord->Modele ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
+    sprintf(Tampon,"%d",UnRecord->Quantite ) ; MonPrintf(Tampon,6,strlen(Tampon)) ;
+    printf("\n") ;
 }
 
-void SaiSieVehiculeHV (int Reference, struct VehiculeHV  *UnRecord )
+void SaiSieVehiculeMV (int Reference, struct VehiculeMV  *UnRecord )
 {
  char Tampon[80] ;
 
@@ -135,13 +135,13 @@ void SaiSieVehiculeHV (int Reference, struct VehiculeHV  *UnRecord )
  
  DelNewLine(UnRecord->Constructeur) ;
  DelNewLine(UnRecord->Modele) ;
- AfficheEnteteVehiculeHV () ;
- AfficheVehiculeHV (UnRecord) ;
+ AfficheEnteteVehiculeMV () ;
+ AfficheVehiculeMV (UnRecord) ;
  printf("-----------------------\n") ;
  return ;
 }
 
-int NombreVehiculesHV (char *NomFichier)
+int NombreVehiculesMV (char *NomFichier)
 {
  FILE *sortie ;
  sortie = fopen(NomFichier,"r") ; /* Si le fichier existe, on le cree sinon on ajoute */
@@ -153,10 +153,10 @@ int NombreVehiculesHV (char *NomFichier)
  else
     fprintf(stderr,"Ouverture reussie \n") ;
  fseek(sortie, 0, SEEK_END ) ;
- return (ftell(sortie)/ sizeof(struct VehiculeHV  )) ;
+ return (ftell(sortie)/ sizeof(struct VehiculeMV  )) ;
 }
 
-void CreationAjoutVehiculeHV (char *NomFichier,struct VehiculeHV  *UnRecord )
+void CreationAjoutVehiculeMV (char *NomFichier,struct VehiculeMV  *UnRecord )
 {
  FILE *sortie ;
  char Redo ;
@@ -174,14 +174,14 @@ void CreationAjoutVehiculeHV (char *NomFichier,struct VehiculeHV  *UnRecord )
  
   printf("Position actuelle dans le fichier %ld\n",ftell(sortie)) ;
   UnRecord-> Supprime = 0 ;
-  nbr = fwrite(UnRecord,sizeof(struct VehiculeHV  ),1,sortie) ;
+  nbr = fwrite(UnRecord,sizeof(struct VehiculeMV  ),1,sortie) ;
   fflush(sortie) ;
  fclose(sortie) ;
 }
 
 
 
-void AfficheFacture(struct FactureHV *UneFacture)
+void AfficheFacture(struct FactureMV *UneFacture)
 {
  char Tampon[80] ;
  sprintf(Tampon,"%d",UneFacture->NumeroFacturation ) ; MonPrintf(Tampon,4,strlen(Tampon)) ;
@@ -192,9 +192,9 @@ void AfficheFacture(struct FactureHV *UneFacture)
  printf("\n") ;
 }
 
-void ListingVehiculesHV (char *NomFichier)
+void ListingVehiculesMV (char *NomFichier)
 {
- struct VehiculeHV   UnRecord ;
+ struct VehiculeMV   UnRecord ;
  FILE *sortie ;
  char Tampon[80] ;
  int  Numero ;
@@ -209,21 +209,21 @@ void ListingVehiculesHV (char *NomFichier)
  else
     fprintf(stderr,"Ouverture reussie \n") ;
 
- AfficheEnteteVehiculeHV () ;
+ AfficheEnteteVehiculeMV () ;
  nbr = fread(&UnRecord,sizeof(UnRecord),1,sortie) ;
  
  while ( !feof(sortie) )
  {
   fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
-  AfficheVehiculeHV ( &UnRecord) ;
+  AfficheVehiculeMV ( &UnRecord) ;
   nbr = fread(&UnRecord,sizeof(UnRecord),1,sortie) ;
  }
  fclose(sortie) ;
 }
 
-void ListingFacturesHV(char *NomFichier)
+void ListingFacturesMV(char *NomFichier)
 {
- struct FactureHV UneFacture ;
+ struct FactureMV UneFacture ;
  FILE *sortie ;
  char Tampon[80] ;
  int  Numero ;
@@ -250,12 +250,17 @@ void ListingFacturesHV(char *NomFichier)
  fclose(sortie) ;
 }
 
+
+void Recherche(char *NomFichier)
+{
+
+}
 int main()
 {
  char Choix ;
  char Tampon[80] ;
  int res ;
- struct VehiculeHV  UnRecord ;
+ struct VehiculeMV  UnRecord ;
  int Numero ;
  while(1)
  {
@@ -293,6 +298,7 @@ int main()
    case '2': ListingVehiculesHV ("VehiculesHV") ;
              break ;
    case '4': 
+            Recherche("VehiculesHV");
              break ;
    case '6': ListingFacturesHV("FactureHV") ;
 	     break ;

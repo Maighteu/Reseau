@@ -1,4 +1,4 @@
-#include "LibSerHV.h"
+#include "LibSerMV.h"
 
 void AProposServeurHV(char *Version,char *Nom1,char* Nom2)
 {
