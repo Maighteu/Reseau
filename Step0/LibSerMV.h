@@ -4,5 +4,5 @@
 #include <time.h>
 #include "data.h"
 
-void AProposServeurHV(char *Version,char *Nom1,char* Nom2) ;
+void AProposServeurMV(char *Version,char *Nom1,char* Nom2) ;
 

@@ -1,6 +1,6 @@
 #include "LibSerMV.h"
 
-void AProposServeurHV(char *Version,char *Nom1,char* Nom2)
+void AProposServeurMV(char *Version,char *Nom1,char* Nom2)
 {
  printf("Version : %s \n",Version ) ;
  printf("Nom1 : %s \n",Nom1 ) ;

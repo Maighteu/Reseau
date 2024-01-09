@@ -105,7 +105,8 @@ void AfficheEnteteVehiculeMV ()
      sprintf(Tampon,"%s","Ref" ) ;MonPrintf(Tampon,4,strlen(Tampon)) ;
      sprintf(Tampon,"%s","Constructeur") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
      sprintf(Tampon,"%s","Modele") ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
-     sprintf(Tampon,"%s","Quantite") ; MonPrintf(Tampon,6,strlen(Tampon)) ;
+     sprintf(Tampon,"%s","Quantite") ; MonPrintf(Tampon,30,strlen(Tampon)) ;
+     sprintf(Tampon,"%s","Transmission") ; MonPrintf(Tampon,30,strlen(Tampon)) ;
      printf("\n") ;
 }
 
@@ -115,7 +116,8 @@ void AfficheVehiculeMV (struct VehiculeMV    *UnRecord)
     sprintf(Tampon,"%d",UnRecord->Reference ) ;  MonPrintf(Tampon,4,strlen(Tampon)) ;
     sprintf(Tampon,"%s",UnRecord->Constructeur ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
     sprintf(Tampon,"%s",UnRecord->Modele ) ;    MonPrintf(Tampon,30,strlen(Tampon)) ;
-    sprintf(Tampon,"%d",UnRecord->Quantite ) ; MonPrintf(Tampon,6,strlen(Tampon)) ;
+    sprintf(Tampon,"%d",UnRecord->Quantite ) ; MonPrintf(Tampon,30,strlen(Tampon)) ;
+    sprintf(Tampon,"%s",UnRecord->Transmission ) ; MonPrintf(Tampon,30,strlen(Tampon)) ;
     printf("\n") ;
 }
 
@@ -132,9 +134,12 @@ void SaiSieVehiculeMV (int Reference, struct VehiculeMV  *UnRecord )
  printf("Saisie Quantite :") ;
  fgets(Tampon,sizeof Tampon,stdin ) ;
  UnRecord -> Quantite = atoi(Tampon) ;
+  printf("Saisie Transmission :") ;
+ fgets(UnRecord->Transmission ,sizeof UnRecord->Transmission ,stdin ) ;
  
  DelNewLine(UnRecord->Constructeur) ;
  DelNewLine(UnRecord->Modele) ;
+ DelNewLine(UnRecord->Transmission) ;
  AfficheEnteteVehiculeMV () ;
  AfficheVehiculeMV (UnRecord) ;
  printf("-----------------------\n") ;
@@ -239,13 +244,13 @@ void ListingFacturesMV(char *NomFichier)
     fprintf(stderr,"Ouverture reussie \n") ;
 
  
- nbr = fread(&UneFacture,sizeof(struct FactureHV),1,sortie) ;
+ nbr = fread(&UneFacture,sizeof(struct FactureMV),1,sortie) ;
  
  while ( !feof(sortie) )
  {
   fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
   AfficheFacture( &UneFacture) ;
-  nbr = fread(&UneFacture,sizeof(struct FactureHV ),1,sortie) ;
+  nbr = fread(&UneFacture,sizeof(struct FactureMV ),1,sortie) ;
  }
  fclose(sortie) ;
 }
@@ -253,8 +258,29 @@ void ListingFacturesMV(char *NomFichier)
 
 void Recherche(char *NomFichier)
 {
+   int Reference;
+   struct VehiculeMV   UnRecord ;
+   char buffer[3];
+   printf("Saisie Reference : ");
+   fgets(buffer, sizeof(buffer), stdin);
+   Reference = atoi(buffer);
+   
+   FILE*sortie;
 
+    if((sortie = fopen(NomFichier, "rb"))!=0)
+    {
+        while(fread(&UnRecord,sizeof(struct VehiculeMV),1,sortie))
+        {
+            if(UnRecord.Reference==Reference)
+            {
+               AfficheEnteteVehiculeMV();
+               AfficheVehiculeMV(&UnRecord);
+            }
+        }
+        fclose(sortie);
+    }
 }
+
 int main()
 {
  char Choix ;
@@ -278,7 +304,7 @@ int main()
   {
    case '1': 
              {
-              struct VehiculeHV   UnRecord ;
+              struct VehiculeMV   UnRecord ;
  	     FILE *sortie ;
              char Redo ;
 		
@@ -286,23 +312,23 @@ int main()
  	    while ( Redo=='Y' || Redo=='y')
  	    { 
              int Nombre ;
-             Nombre= NombreVehiculesHV ("VehiculesHV") ;
-  	     SaiSieVehiculeHV (Nombre+1, &UnRecord ) ;
-  	     CreationAjoutVehiculeHV ("VehiculesHV",&UnRecord) ; 
+             Nombre= NombreVehiculesMV ("VehiculesMV") ;
+  	     SaiSieVehiculeMV (Nombre+1, &UnRecord ) ;
+  	     CreationAjoutVehiculeMV ("VehiculesMV",&UnRecord) ; 
   	     printf("Encoder un autre (Y/N) ?)") ;
   	     printf(">>") ; Redo=GetchE() ; printf("\n") ;
  	   }
  
 	     break ;	
              }
-   case '2': ListingVehiculesHV ("VehiculesHV") ;
+   case '2': ListingVehiculesMV ("VehiculesMV") ;
              break ;
    case '4': 
-            Recherche("VehiculesHV");
+            Recherche("VehiculesMV");
              break ;
-   case '6': ListingFacturesHV("FactureHV") ;
+   case '6': ListingFacturesMV("FactureMV") ;
 	     break ;
-   case '7': AProposServeurHV("V 1","Herman","Vanstapel") ;
+   case '7': AProposServeurMV("V 1","Mickael","Vanderheyden") ;
              break ;
    
 	
